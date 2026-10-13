@@ -59,31 +59,21 @@ I used one table, `users`, in the `fastroi_db` database. I chose an auto-increme
 | created_at | DATETIME | Account creation timestamp |
 | last_login | DATETIME | Most recent successful login |
 
-## Run locally
+## Run locally on Windows
 
-1. Install Python and start a local MySQL or MariaDB server.
-2. Open a terminal in this project folder and install the dependencies:
+I developed this project on Windows using PyCharm, XAMPP and phpMyAdmin. The steps below follow that setup.
 
-   ```bash
+1. Install Python and XAMPP, then start Apache and MySQL from the XAMPP Control Panel.
+2. Open PowerShell in the project folder. Create a virtual environment and install the dependencies:
+
+   ```powershell
    python -m venv .venv
-   # Windows PowerShell
-   .venv\Scripts\Activate.ps1
-   # macOS / Linux
-   # source .venv/bin/activate
-   python -m pip install -r requirements.txt
+   .\.venv\Scripts\python.exe -m pip install -r requirements.txt
    ```
 
-3. Create an empty database and import the schema using MySQL or phpMyAdmin:
+3. Open phpMyAdmin through the XAMPP Control Panel. Create a database called `fastroi_db` with the `utf8mb4_general_ci` collation. Select the database, open the **Import** tab and import `sql/schema.sql`.
 
-   ```sql
-   CREATE DATABASE fastroi_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-   ```
-
-   ```bash
-   mysql -u YOUR_ADMIN_USER -p fastroi_db < sql/schema.sql
-   ```
-
-4. Create a local database account with `SELECT`, `INSERT` and `UPDATE` permissions on `fastroi_db.users`. Set its connection details in the same terminal before running the app. For Windows PowerShell:
+4. In phpMyAdmin, create a local database account called `fastroi_app` with a password and give it `SELECT`, `INSERT` and `UPDATE` permissions on `fastroi_db.users`. Set the connection details in the same PowerShell window:
 
    ```powershell
    $env:FASTROI_DB_HOST = "localhost"
@@ -93,15 +83,15 @@ I used one table, `users`, in the `fastroi_db` database. I chose an auto-increme
    $env:FASTROI_DB_PASSWORD = "YOUR_LOCAL_DATABASE_PASSWORD"
    ```
 
-   On macOS / Linux, use `export VARIABLE="value"` for each setting. The application reads environment variables directly; it does not automatically load a `.env` file.
+   Replace the password placeholder with the password you set for the database account. The app reads these environment variables directly.
 
-5. Start the application from the project folder:
+5. Start the app from that PowerShell window:
 
-   ```bash
-   streamlit run app.py
+   ```powershell
+   .\.venv\Scripts\python.exe -m streamlit run app.py
    ```
 
-6. Create an account through the registration form using fictional details for the demonstration. No existing accounts or login passwords are provided.
+6. Create an account through the registration form using fictional details. No existing accounts or login passwords are provided.
 
 ## What I learned
 
