@@ -1,10 +1,12 @@
 # FastROI Login and Registration System
 
-A database-driven registration and login application built with Python, Streamlit and MySQL as part of my MSc Business Analytics coursework at the University of Ghana Business School.
+I built this login and registration app for my Database Management course as part of my MSc Business Analytics programme at the University of Ghana Business School. I used Python and Streamlit for the interface and MySQL to store user accounts.
 
 ## Project background
 
-The assignment used FastROI Digital Solutions Ltd. as a company scenario. Staff registration and login were handled manually, and the task was to build a simple application backed by a relational database. This project demonstrates database design, input validation and authentication logic.
+The project brief described a company, FastROI Digital Solutions Ltd., that wanted to replace its manual staff registration and login process. My task was to design the database and build an app where users could create an account and log in.
+
+I organised the app into registration, login and welcome pages. I kept the database connection in a separate Python file so I could manage the connection settings in one place.
 
 ## What the application does
 
@@ -42,7 +44,7 @@ The assignment used FastROI Digital Solutions Ltd. as a company scenario. Staff 
 
 ## Database design
 
-The `fastroi_db` database contains one `users` table. `user_id` is an auto-incrementing primary key; `email` and `username` have unique constraints. There are no foreign keys because this version uses a single table.
+I used one table, `users`, in the `fastroi_db` database. I chose an auto-incrementing `user_id` as the primary key so an account keeps the same identifier even if its details change. I added unique constraints to `email` and `username` to prevent duplicate accounts. This version has no foreign keys because it uses only one table.
 
 | Column | Type | Purpose |
 | --- | --- | --- |
@@ -103,14 +105,20 @@ The `fastroi_db` database contains one `users` table. `user_id` is an auto-incre
 
 ## What I learned
 
-This project helped me connect a Python interface to a relational database, select suitable field types and constraints, use parameterised queries, implement password hashing and manage database connections. It also gave me practice separating connection settings from the main application.
+I gained practice connecting a Streamlit app to MySQL and working with database constraints. I also learned how to hash and check passwords with bcrypt, use parameterised queries and close database connections after each operation.
+
+One useful detail was that two users can choose the same password but have different stored hashes because bcrypt generates a separate salt for each password. I also used Streamlit session state to keep track of whether a user was logged in.
 
 ## Scope and limitations
 
-This is a local academic prototype. Email format validation does not verify ownership or employee status. The welcome page is a basic demonstration rather than a complete employee management dashboard. The application does not implement email verification, password recovery, multi-factor authentication, login rate limiting, account lockout or a complete audit log. It stores only the latest successful login time. Dependencies retain the original unpinned format.
+I built this as a local coursework project. The welcome page confirms a successful login; it does not include employee management tools.
 
-The original coursework included manual interface testing. This portfolio copy has had its Python syntax and privacy checks verified; registration and login still need an end-to-end check with a running local database.
+The email check only validates the format. It does not confirm that the person owns the email address or works for the company. Password recovery, email verification, multi-factor authentication and controls for repeated failed login attempts are not included. The database records the latest successful login time, but there is no separate table for a full login history. The dependency versions are not pinned.
 
-## Privacy in this portfolio version
+For the coursework, I tested registration and login through the interface, including empty inputs, duplicate accounts and password validation. The cleaned GitHub version has passed Python syntax checks, but it still needs a full registration and login check with a running database after the connection changes.
 
-The database script contains table definitions and constraints only. Account records, phone numbers, personal email addresses, saved password hashes, example passwords and academic identifiers have been excluded. The original submission PDFs and screenshots are omitted because they contain identifiers and account information. Database connection settings are supplied locally and should never be committed.
+## About the files shared here
+
+The accounts used for the assignment had fictitious emails and phone numbers. For this public version, I have included an empty database schema so anyone running the app can create their own test accounts.
+
+I have left out my student ID, the original submission PDFs, saved account records and password hashes. The database connection now reads settings from environment variables, so local credentials do not need to be added to the code.
