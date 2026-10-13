@@ -2,6 +2,12 @@
 
 I built this application for my Database Management course during my MSc Business Analytics programme at the University of Ghana Business School. It uses Python, Streamlit and MySQL to register users, check login credentials and record the latest successful login.
 
+## Live demo
+
+[Open the FastROI app](https://fastroi-app-system-project.streamlit.app/)
+
+The app runs on Streamlit Community Cloud and connects to a MySQL database hosted on Aiven. To try it, register with fictional details and an email in the format `firstname.lastname@fastroi.com`, then log in with your chosen username and password.
+
 ## Project background
 
 The coursework scenario involved FastROI Digital Solutions Ltd., a company looking to replace its manual staff registration and login process. My task was to design the database and build a working registration and login interface.
@@ -39,7 +45,7 @@ I developed the project on Windows using PyCharm, with XAMPP and phpMyAdmin for 
 
 ## Database structure
 
-The `fastroi_db` database contains one `users` table.
+The application uses one `users` table. My local database is named `fastroi_db`; the live demo uses Aiven's `defaultdb`. The database name is supplied through the connection settings.
 
 | Column | Type | Purpose |
 | --- | --- | --- |
@@ -103,7 +109,7 @@ I developed this project on Windows using PyCharm, XAMPP and phpMyAdmin. The ste
 
 ## Testing and current scope
 
-For the coursework, I tested the interface for registration, login, empty inputs, duplicate accounts and password validation. The environment-variable connection settings added for this repository still need a full registration and login check with a running database.
+For the coursework, I tested the interface for registration, login, empty inputs, duplicate accounts and password validation. On 13 October 2026, I also tested the deployed app with a fictitious account. Registration succeeded, and logging in displayed the welcome page.
 
 The current app covers registration and login, with a basic welcome page. Email validation checks the format but does not verify email ownership or employee status. Password recovery, multi-factor authentication, login rate limiting and a full login history are possible next improvements.
 
