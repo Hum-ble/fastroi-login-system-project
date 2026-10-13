@@ -1,63 +1,71 @@
 # FastROI Login and Registration System
 
-I built this login and registration app for my Database Management course as part of my MSc Business Analytics programme at the University of Ghana Business School. I used Python and Streamlit for the interface and MySQL to store user accounts.
+I built this application for my Database Management course during my MSc Business Analytics programme at the University of Ghana Business School. It uses Python, Streamlit and MySQL to register users, check login credentials and record the latest successful login.
 
 ## Project background
 
-The project brief described a company, FastROI Digital Solutions Ltd., that wanted to replace its manual staff registration and login process. My task was to design the database and build an app where users could create an account and log in.
+The coursework scenario involved FastROI Digital Solutions Ltd., a company looking to replace its manual staff registration and login process. My task was to design the database and build a working registration and login interface.
 
-I organised the app into registration, login and welcome pages. I kept the database connection in a separate Python file so I could manage the connection settings in one place.
+## Main features
 
-## What the application does
-
-- Registers users with first name, optional middle name, last name, email, optional phone number, username and password.
-- Checks that an email follows the `firstname.lastname@fastroi.com` format.
-- Requires passwords with at least 12 characters, an uppercase letter, a lowercase letter, a number and a supported special character.
-- Hashes passwords with bcrypt and a generated salt before storage.
-- Checks for duplicate email addresses and usernames, supported by database unique constraints.
-- Uses parameterised SQL queries for registration and login.
-- Verifies login credentials, updates the most recent login time and displays a welcome page.
-- Uses Streamlit session state for navigation, login status and logout.
+- Registration with name, email, optional phone number, username and password.
+- Email format validation for `firstname.lastname@fastroi.com`.
+- Password validation requiring at least 12 characters, uppercase and lowercase letters, a number and a supported special character.
+- Password hashing and verification using bcrypt.
+- Duplicate email and username checks, backed by database unique constraints.
+- Parameterised SQL queries for registration and login.
+- A welcome page after successful login, with session state and logout.
+- Account creation and latest successful login timestamps.
 
 ## Tools used
 
-| Tool | Purpose |
+| Tool | Role |
 | --- | --- |
-| Python | Application logic and validation |
-| Streamlit | Registration, login and welcome interface |
-| MySQL / MariaDB | Relational account storage |
-| mysql-connector-python | Database connection and queries |
+| Python | Application logic and input validation |
+| Streamlit | Registration, login and welcome pages |
+| MySQL / MariaDB | User account storage |
+| mysql-connector-python | Database queries and connections |
 | bcrypt | Password hashing and verification |
-| XAMPP and phpMyAdmin | Original local database setup and administration |
-| PyCharm | Original development environment |
 
-## Repository files
+I developed the project on Windows using PyCharm, with XAMPP and phpMyAdmin for the local database setup. XAMPP was a convenient way to run the database locally; the app can also connect to a separately installed or hosted MySQL server through its connection settings.
 
-| File | Contents |
-| --- | --- |
-| `app.py` | Interface, validation, registration and login logic |
-| `db_connection.py` | Database connection using environment variables |
-| `sql/schema.sql` | Empty users table with keys and constraints |
-| `requirements.txt` | Python dependencies |
-| `fastroi_logo.png` | Branding asset supplied with the project |
-| `.gitignore` | Excludes local settings and common development files |
+## Design decisions
 
-## Database design
+- **Account identifiers:** I used an auto-incrementing `user_id` as the primary key so an account keeps its identifier when its details change.
+- **Duplicate accounts:** Unique constraints on `email` and `username` enforce account uniqueness in the database, alongside checks in the app.
+- **Password storage:** bcrypt generates a salt for each password. Two accounts can therefore use the same password and still have different stored hashes.
+- **Database queries:** User input is passed as query parameters rather than added directly to SQL strings.
+- **Connection handling:** Database settings are kept in `db_connection.py`. Credentials come from environment variables, and connections and cursors are closed after each operation.
 
-I used one table, `users`, in the `fastroi_db` database. I chose an auto-incrementing `user_id` as the primary key so an account keeps the same identifier even if its details change. I added unique constraints to `email` and `username` to prevent duplicate accounts. This version has no foreign keys because it uses only one table.
+## Database structure
+
+The `fastroi_db` database contains one `users` table.
 
 | Column | Type | Purpose |
 | --- | --- | --- |
-| user_id | INT | Account identifier |
+| user_id | INT | Auto-incrementing primary key |
 | first_name | VARCHAR(50) | First name |
 | middle_name | VARCHAR(50) | Optional middle name |
 | last_name | VARCHAR(50) | Last name |
-| email | VARCHAR(100) | Unique email |
+| email | VARCHAR(100) | Unique email address |
 | phone | VARCHAR(20) | Optional phone number |
 | username | VARCHAR(50) | Unique login name |
-| password | VARBINARY(80) | bcrypt hash; original schema permits NULL |
-| created_at | DATETIME | Account creation timestamp |
-| last_login | DATETIME | Most recent successful login |
+| password | VARBINARY(80) | bcrypt password hash |
+| created_at | DATETIME | Account creation time |
+| last_login | DATETIME | Latest successful login |
+
+The schema contains no account records. Create test accounts through the registration form so passwords are hashed before being stored.
+
+## Project files
+
+| File | Purpose |
+| --- | --- |
+| `app.py` | Interface, validation, registration and login |
+| `db_connection.py` | Database connection settings |
+| `sql/schema.sql` | Table definition, primary key and unique constraints |
+| `requirements.txt` | Python dependencies |
+| `fastroi_logo.png` | Application logo |
+| `.gitignore` | Excludes local credentials and development files |
 
 ## Run locally on Windows
 
@@ -91,24 +99,16 @@ I developed this project on Windows using PyCharm, XAMPP and phpMyAdmin. The ste
    .\.venv\Scripts\python.exe -m streamlit run app.py
    ```
 
-6. Create an account through the registration form using fictional details. No existing accounts or login passwords are provided.
+6. Create an account through the registration form using fictional details. The database starts empty.
 
-## What I learned
+## Testing and current scope
 
-I gained practice connecting a Streamlit app to MySQL and working with database constraints. I also learned how to hash and check passwords with bcrypt, use parameterised queries and close database connections after each operation.
+For the coursework, I tested the interface for registration, login, empty inputs, duplicate accounts and password validation. The environment-variable connection settings added for this repository still need a full registration and login check with a running database.
 
-One useful detail was that two users can choose the same password but have different stored hashes because bcrypt generates a separate salt for each password. I also used Streamlit session state to keep track of whether a user was logged in.
+The current app covers registration and login, with a basic welcome page. Email validation checks the format but does not verify email ownership or employee status. Password recovery, multi-factor authentication, login rate limiting and a full login history are possible next improvements.
 
-## Scope and limitations
+## Possible extensions
 
-I built this as a local coursework project. The welcome page confirms a successful login; it does not include employee management tools.
+The database design could be adapted to PostgreSQL or another relational database. A PostgreSQL version would need a different Python driver, changes to the schema and database-specific code, and testing. The current implementation uses MySQL.
 
-The email check only validates the format. It does not confirm that the person owns the email address or works for the company. Password recovery, email verification, multi-factor authentication and controls for repeated failed login attempts are not included. The database records the latest successful login time, but there is no separate table for a full login history. The dependency versions are not pinned.
-
-For the coursework, I tested registration and login through the interface, including empty inputs, duplicate accounts and password validation. The cleaned GitHub version has passed Python syntax checks, but it still needs a full registration and login check with a running database after the connection changes.
-
-## About the files shared here
-
-The accounts used for the assignment had fictitious emails and phone numbers. For this public version, I have included an empty database schema so anyone running the app can create their own test accounts.
-
-I have left out my student ID, the original submission PDFs, saved account records and password hashes. The database connection now reads settings from environment variables, so local credentials do not need to be added to the code.
+Other extensions include email verification and a separate login activity table to record successful and failed attempts.
